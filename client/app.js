@@ -26,8 +26,10 @@ window.addEventListener('load', function() {
 		console.log('SocketIOFileClient: Client streaming... ' + data.uploaded + ' / ' + data.size);
 	});
 
-	socketIOFile.on('complete', function() {
+	socketIOFile.on('complete', function(data) {
+		console.log(data);
 		console.log('File Uploaded Successfully!');
+		console.log('Path uploaded: ' + data.path);
 	});
 
 	document.getElementById('UploadButton').addEventListener('click', function() {
