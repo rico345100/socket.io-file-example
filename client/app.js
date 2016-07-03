@@ -32,8 +32,21 @@ window.addEventListener('load', function() {
 		console.log('Path uploaded: ' + data.path);
 	});
 
+	socketIOFile.on('error', function(data) {
+		console.log('Failed to upload file.');
+		console.log(data);
+	});
+
+	socketIOFile.on('abort', function(data) {
+		console.log('Server abort uploading.');
+	});
+
 	document.getElementById('UploadButton').addEventListener('click', function() {
 		var file = document.getElementById('FileBox').files[0];
-		socketIOFile.upload(file);
+		socketIOFile.upload(file, {
+			types: [
+				'audio/mp3'
+			]
+		});
 	});
 });
