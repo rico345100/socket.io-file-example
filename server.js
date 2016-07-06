@@ -21,17 +21,29 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
 	console.log('connected: ' + socket.id);
 
-	var uploader = new SocketIOFile(socket, {
-		uploadDir: 'data/music'
+	function start() {
+		console.log('Upload started');
+	}
+	function stream(data) {
+		console.log('Streaming... ' + data.uploaded + ' / ' + data.size);
+	}
+	function complete(data) {
+		if(data.uploadTo === 'image') {
+			console.log('image uploaded');
+		}
+		else {
+			console.log('music uploaded');
+		}
+	}
+
+	var imageUploader = new SocketIOFile(socket, {
+		uploadDir: {
+			image: 'userdata/image',
+			music: 'userdata/music'
+		}
 	});
 
-	uploader.on('start', (fileInfo) => {
-		console.log('Upload started');
-	});
-	uploader.on('stream', (data) => {
-		console.log('Streaming... ' + data.uploaded + ' / ' + data.size);
-	});
-	uploader.on('complete', () => {
-		console.log('Completed!');
-	});
+	imageUploader.on('start', start);
+	imageUploader.on('stream', stream);
+	imageUploader.on('complete', complete);
 });

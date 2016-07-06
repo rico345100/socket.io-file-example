@@ -1,52 +1,45 @@
 var socket = io('http://localhost:3000');
 
-socket.on('error', (err) => {
-	console.log(err);
-});
-
-// set event handlers
-socket.on('connect', () => {
-	console.log('connection established!');
-});
-
-// unset event handlers
-socket.on('disconnect', () => {
-	console.log('disconnect connection');
-});
-
 window.addEventListener('load', function() {
 	var socketIOFile = new SocketIOFileClient(socket);
 
-	socketIOFile.on('start', function() {
-		console.log('File uploading staring...');
-	});
-
-	socketIOFile.on('stream', function(data) {
-		//console.log('SocketIOFileClient: Client streaming... ' + (Math.round(data.percent * 100)/100) + '%');
+	function streaming(data) {
 		console.log('SocketIOFileClient: Client streaming... ' + data.uploaded + ' / ' + data.size);
-	});
+	}
 
-	socketIOFile.on('complete', function(data) {
-		console.log(data);
+	function complete(data) {
 		console.log('File Uploaded Successfully!');
-		console.log('Path uploaded: ' + data.path);
-	});
-
-	socketIOFile.on('error', function(data) {
-		console.log('Failed to upload file.');
 		console.log(data);
+	}
+
+	function error(data) {
+		console.log('Error while uploading:');
+		console.log(data);
+	}
+
+	socketIOFile.on('stream', streaming);
+	socketIOFile.on('complete', complete);
+	socketIOFile.on('error', error);
+
+	document.getElementById('uploadImage').addEventListener('click', function() {
+		var file = document.getElementById('fileImage').files[0];
+		socketIOFile.upload(file, {
+			types: [
+				'image/png',
+				'image/jpeg',
+				'image/pjpeg'
+			],
+			to: 'image'
+		});
 	});
 
-	socketIOFile.on('abort', function(data) {
-		console.log('Server abort uploading.');
-	});
-
-	document.getElementById('UploadButton').addEventListener('click', function() {
-		var file = document.getElementById('FileBox').files[0];
+	document.getElementById('uploadMusic').addEventListener('click', function() {
+		var file = document.getElementById('fileMusic').files[0];
 		socketIOFile.upload(file, {
 			types: [
 				'audio/mp3'
-			]
+			],
+			to: 'music'
 		});
 	});
 });
