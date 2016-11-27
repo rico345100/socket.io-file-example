@@ -1,45 +1,31 @@
 var socket = io('http://localhost:3000');
+var uploader = new SocketIOFileClient(socket);
+var form = document.getElementById('form');
 
-window.addEventListener('load', function() {
-	var socketIOFile = new SocketIOFileClient(socket);
-
-	function streaming(data) {
-		console.log('SocketIOFileClient: Client streaming... ' + data.uploaded + ' / ' + data.size);
-	}
-
-	function complete(data) {
-		console.log('File Uploaded Successfully!');
-		console.log(data);
-	}
-
-	function error(data) {
-		console.log('Error while uploading:');
-		console.log(data);
-	}
-
-	socketIOFile.on('stream', streaming);
-	socketIOFile.on('complete', complete);
-	socketIOFile.on('error', error);
-
-	document.getElementById('uploadImage').addEventListener('click', function() {
-		var file = document.getElementById('fileImage').files[0];
-		socketIOFile.upload(file, {
-			types: [
-				'image/png',
-				'image/jpeg',
-				'image/pjpeg'
-			],
-			to: 'image'
-		});
-	});
-
-	document.getElementById('uploadMusic').addEventListener('click', function() {
-		var file = document.getElementById('fileMusic').files[0];
-		socketIOFile.upload(file, {
-			types: [
-				'audio/mp3'
-			],
-			to: 'music'
-		});
-	});
+uploader.on('start', function(fileInfo) {
+	console.log('Start uploading', fileInfo);
 });
+uploader.on('stream', function(fileInfo) {
+	console.log('Streaming... sent ' + fileInfo.sent + ' bytes.');
+});
+uploader.on('complete', function(fileInfo) {
+	console.log('Upload Complete', fileInfo);
+});
+uploader.on('error', function(err) {
+	console.log('Error!', err);
+});
+uploader.on('abort', function(fileInfo) {
+	console.log('Aborted: ', fileInfo);
+});
+
+form.onsubmit = function(ev) {
+	ev.preventDefault();
+	
+	var fileEl = document.getElementById('file');
+	var uploadIds = uploader.upload(fileEl);
+
+	// setTimeout(function() {
+		// uploader.abort(uploadIds[0]);
+		// console.log(uploader.getUploadInfo());
+	// }, 1000);
+};

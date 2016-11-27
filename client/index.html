@@ -1,33 +1,20 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Socket.io-file Example</title>
+	<title>Socket.io-file 2.x File Upload Example</title>
 </head>
 <body>
-	<div>
-		<h2>Upload Image</h2>
-		<span>
-			<label for="fileImage">Choose A Image file(JPEG/PNG only):</label>
-			<input type="file" id="fileImage" />
-			<br />
+	<h1>Socket.io-file 2.x File Upload Example</h1>
+	<p>Select file and click upload button to upload.</p>
+	<p>Multiple upload also supports.</p>
 
-			<button type="button" id="uploadImage">Upload</button>
-		</span>
-	</div>
+	<form id="form">
+		<input type="file" id="file" multiple />
+		<input type="submit" value="Upload" />
+	</form>
 
-	<div id="UploadBox">
-		<h2>Upload Music</h2>
-		<span>
-			<label for="fileMusic">Choose A MP3 file:</label>
-			<input type="file" id="fileMusic" />
-			<br />
-
-			<button type="button" id="uploadMusic">Upload</button>
-		</span>
-	</div>
-
-	<script src="/socket.io.js"></script>
-	<script src="/socket.io-file-client.js"></script>
-	<script src="/app.js"></script>
+	<script src="socket.io.js"></script>
+	<script src="socket.io-file-client.js"></script>
+	<script src="app.js"></script>
 </body>
 </html>
