@@ -2,6 +2,9 @@ var socket = io('http://localhost:3000');
 var uploader = new SocketIOFileClient(socket);
 var form = document.getElementById('form');
 
+uploader.on('ready', function() {
+	console.log('SocketIOFile ready to go!');
+});
 uploader.on('start', function(fileInfo) {
 	console.log('Start uploading', fileInfo);
 });
@@ -21,11 +24,10 @@ uploader.on('abort', function(fileInfo) {
 form.onsubmit = function(ev) {
 	ev.preventDefault();
 	
+	// Send File Element to upload
 	var fileEl = document.getElementById('file');
-	var uploadIds = uploader.upload(fileEl);
+	// var uploadIds = uploader.upload(fileEl);
 
-	// setTimeout(function() {
-		// uploader.abort(uploadIds[0]);
-		// console.log(uploader.getUploadInfo());
-	// }, 1000);
+	// Or just pass file objects directly
+	var uploadIds = uploader.upload(fileEl.files);
 };
