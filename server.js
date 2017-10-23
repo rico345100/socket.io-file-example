@@ -44,6 +44,7 @@ io.on('connection', (socket) => {
 
 		// 	return `${fname}_${count++}.${ext}`;
 		// }
+		rename: 'MyMusic.mp3'
 	});
 	uploader.on('start', (fileInfo) => {
 		console.log('Start uploading');
